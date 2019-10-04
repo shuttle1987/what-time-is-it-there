@@ -15,7 +15,7 @@ setup(
     ],
     package_dir={'wtii': 'wtii'},
     include_package_data=True,
-    install_requires=[],
+    install_requires=['arrow'],
     zip_safe=False,
     keywords='timezones',
     entry_points = {
