@@ -18,6 +18,9 @@ setup(
     install_requires=[],
     zip_safe=False,
     keywords='timezones',
+    entry_points = {
+        'console_scripts': ['wtii=wtii.command_line:main'],
+    },
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
