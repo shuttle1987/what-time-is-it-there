@@ -15,7 +15,10 @@ setup(
     ],
     package_dir={'wtii': 'wtii'},
     include_package_data=True,
-    install_requires=['arrow'],
+    install_requires=[
+        'arrow',
+        'tzlocal',
+    ],
     zip_safe=False,
     keywords='timezones',
     entry_points = {
