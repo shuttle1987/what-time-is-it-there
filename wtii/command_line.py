@@ -27,7 +27,7 @@ def main() -> None:
         return None
     utc_now = arrow.utcnow()
     if args.verbose is True:
-        print("UTC", utc_now)
+        print("UTC", utc_now.strftime("%Y-%m-%d %H:%M:%S"))
     for loc, tz_loc in locations().items():
         if current_zone_name == tz_loc:
             prefix = "--->"
