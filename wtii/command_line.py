@@ -33,4 +33,6 @@ def main() -> None:
             prefix = "--->"
         else:
             prefix = "****"
-        print(prefix, loc, utc_now.to(tz_loc))
+        localized_time = utc_now.to(tz_loc)
+        localized_day = localized_time.strftime("%A")
+        print(f'{prefix} {loc} \t {localized_time.strftime("%Y-%m-%d %H:%M:%S")} ({localized_day})')
