@@ -12,9 +12,6 @@ parser.add_argument('-n', '--now', help="Current time (plus offset)")
 
 parser.add_argument('-v', '--verbose', action='store_true', help="Enable verbose mode")
 
-local_tz = get_localzone()
-current_zone_name = local_tz.zone
-
 def locations() -> Dict[str, str]:
     """Return a dict of the locations of interest along with their time zones"""
     return {
@@ -23,20 +20,40 @@ def locations() -> Dict[str, str]:
         "Chicago":"America/Chicago",
     }
 
-def main() -> None:
-    time_format_str: str = "%Y-%m-%d %H:%M:%S"
-    args = parser.parse_args()
-    if args.locations is True:
-        print(locations())
-        return None
-    utc_now = arrow.utcnow()
-    if args.verbose is True:
-        print("UTC", utc_now.strftime(time_format_str))
-    for loc, tz_loc in locations().items():
+
+def printer(*, current_utc_time, current_location, locations: dict, format_str: str) -> str:
+    """Pretty print the current locations"""
+    results = []
+    current_zone_name = current_location.zone
+    for loc, tz_loc in locations.items():
         if current_zone_name == tz_loc:
             prefix = "--->"
         else:
             prefix = "****"
-        localized_time = utc_now.to(tz_loc)
+        localized_time = current_utc_time.to(tz_loc)
         localized_day = localized_time.strftime("%A")
-        print(f'{prefix} {loc} \t {localized_time.strftime(time_format_str)} ({localized_day})')
+        results.append(f'{prefix} {loc} \t {localized_time.strftime(format_str)} ({localized_day})')
+    return '\n'.join(results)
+
+def main() -> None:
+    time_format_str: str = "%Y-%m-%d %H:%M:%S"
+    args = parser.parse_args()
+    locs = locations()
+    if args.locations is True:
+        print(locs)
+        return None
+    utc_now = arrow.utcnow()
+
+    if args.verbose is True:
+        if "UTC" not in locs:
+            locs['UTC'] = 'UTC'
+
+    local_tz = get_localzone()
+
+    formatted_times: str = printer(
+        current_utc_time=utc_now,
+        current_location=local_tz,
+        locations=locs,
+        format_str=time_format_str
+        )
+    print(formatted_times)
