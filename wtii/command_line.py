@@ -17,17 +17,21 @@ current_zone_name = local_tz.zone
 
 def locations() -> Dict[str, str]:
     """Return a dict of the locations of interest along with their time zones"""
-    return {"Australian Office":"Australia/Melbourne",
-            "Canadian Office":"America/Toronto"}
+    return {
+        "Australian Office":"Australia/Melbourne",
+        "Canadian Office":"America/Toronto",
+        "Chicago":"America/Chicago",
+    }
 
 def main() -> None:
+    time_format_str: str = "%Y-%m-%d %H:%M:%S"
     args = parser.parse_args()
     if args.locations is True:
         print(locations())
         return None
     utc_now = arrow.utcnow()
     if args.verbose is True:
-        print("UTC", utc_now.strftime("%Y-%m-%d %H:%M:%S"))
+        print("UTC", utc_now.strftime(time_format_str))
     for loc, tz_loc in locations().items():
         if current_zone_name == tz_loc:
             prefix = "--->"
@@ -35,4 +39,4 @@ def main() -> None:
             prefix = "****"
         localized_time = utc_now.to(tz_loc)
         localized_day = localized_time.strftime("%A")
-        print(f'{prefix} {loc} \t {localized_time.strftime("%Y-%m-%d %H:%M:%S")} ({localized_day})')
+        print(f'{prefix} {loc} \t {localized_time.strftime(time_format_str)} ({localized_day})')
